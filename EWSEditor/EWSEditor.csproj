@@ -123,6 +123,9 @@
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.Platform, Version=3.19.4.11002, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.19.4\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
@@ -262,6 +265,12 @@
     </Compile>
     <Compile Include="Forms\Dialogs\EnterTextForm.Designer.cs">
       <DependentUpon>EnterTextForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Dialogs\ManageServicesDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Dialogs\ManageServicesDialog.Designer.cs">
+      <DependentUpon>ManageServicesDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Dialogs\PropertySetDialogAddFromCSV.cs">
       <SubType>Form</SubType>
@@ -961,6 +970,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Settings\ServiceSessionSetting.cs" />
+    <Compile Include="Settings\StoredServices.cs" />
     <EmbeddedResource Include="ExchangeReports\ExchangeMeetingRoomStatistics.resx">
       <DependentUpon>ExchangeMeetingRoomStatistics.cs</DependentUpon>
     </EmbeddedResource>
@@ -996,6 +1006,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dialogs\EnterTextForm.resx">
       <DependentUpon>EnterTextForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Dialogs\ManageServicesDialog.resx">
+      <DependentUpon>ManageServicesDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dialogs\PropertySetDialogAddFromCSV.resx">
       <DependentUpon>PropertySetDialogAddFromCSV.cs</DependentUpon>

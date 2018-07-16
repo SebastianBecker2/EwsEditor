@@ -18,7 +18,9 @@ namespace EWSEditor.Forms
         private EnumComboBox<ConnectingIdType> connectingIdCombo = new EnumComboBox<ConnectingIdType>();
         private EnumComboBox<ExchangeVersion> exchangeVersionCombo = new EnumComboBox<ExchangeVersion>();
 
-        private ServiceDialog()
+        public bool CheckOnOkay { get; set; } = true;
+
+        public ServiceDialog()
         {
             InitializeComponent();
         }
@@ -275,7 +277,10 @@ namespace EWSEditor.Forms
                 // EwsProxyFactory.AccountAccessingMailbox
 
                 // ----    Do a basic test to be sure that the mailbox can be reached with an EWS call   ----
-                CurrentService.TestExchangeService();
+                if (CheckOnOkay)
+                {
+                    CurrentService.TestExchangeService();
+                }
 
                 CurrentService.OnSerializeCustomSoapHeaders += m_Service_OnSerializeCustomSoapHeaders;
            

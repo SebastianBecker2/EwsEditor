@@ -10,6 +10,8 @@ using EWSEditor.Settings;
 using Microsoft.Exchange.WebServices.Data;
 using EWSEditor.Exchange;
 using EWSEditor.Common;
+using EWSEditor.Settings.Internals;
+using System.Linq;
 
 namespace EWSEditor.Forms
 {
@@ -162,6 +164,8 @@ namespace EWSEditor.Forms
         // MenuItems to add to the File menu
         private System.Windows.Forms.ToolStripMenuItem newExchangeServiceMenu = new ToolStripMenuItem();
         private System.Windows.Forms.ToolStripMenuItem openDefaultExchangeServiceMenu = new ToolStripMenuItem();
+        private System.Windows.Forms.ToolStripMenuItem manageStoredExchangeServicesMenu = new ToolStripMenuItem();
+        private System.Windows.Forms.ToolStripMenuItem storedExchangeServicesMenu = new ToolStripMenuItem();
         private System.Windows.Forms.ToolStripMenuItem closeExchangeServiceMenu = new ToolStripMenuItem();
         private System.Windows.Forms.ToolStripSeparator fileSplitMenu1 = new ToolStripSeparator();
         private System.Windows.Forms.ToolStripMenuItem openProfileMenu = new ToolStripMenuItem();
@@ -543,6 +547,16 @@ namespace EWSEditor.Forms
             this.openDefaultExchangeServiceMenu.Text = "Open Default Exchange Service";
             this.openDefaultExchangeServiceMenu.Click += new System.EventHandler(this.OpenDefaultExchangeServiceMenu_Click);
 
+            this.manageStoredExchangeServicesMenu.Name = "mnuManageBindings";
+            this.manageStoredExchangeServicesMenu.Size = new System.Drawing.Size(237, 22);
+            this.manageStoredExchangeServicesMenu.Text = "Manage Stored Exchange Services";
+            this.manageStoredExchangeServicesMenu.Click += new System.EventHandler(this.ManageStoredExchangeServicesMenu_Click);
+
+            this.storedExchangeServicesMenu.Name = "mnuStoredBindings";
+            this.storedExchangeServicesMenu.Size = new System.Drawing.Size(237, 22);
+            this.storedExchangeServicesMenu.Text = "Stored Exchange Services";
+            this.storedExchangeServicesMenu.Enabled = false;
+
             this.closeExchangeServiceMenu.Name = "mnuCloseBinding";
             this.closeExchangeServiceMenu.Size = new System.Drawing.Size(237, 22);
             this.closeExchangeServiceMenu.Text = "Close Exchange Service";
@@ -570,6 +584,8 @@ namespace EWSEditor.Forms
             //this.mnuFile.DropDownItems.Insert(exit, this.fileSplitMenu1);  
             //this.mnuFile.DropDownItems.Insert(exit, this.openProfileMenu);
             this.mnuFile.DropDownItems.Insert(exit, this.closeExchangeServiceMenu);
+            this.mnuFile.DropDownItems.Insert(exit, this.storedExchangeServicesMenu);
+            this.mnuFile.DropDownItems.Insert(exit, this.manageStoredExchangeServicesMenu);
             this.mnuFile.DropDownItems.Insert(exit, this.openDefaultExchangeServiceMenu);
             this.mnuFile.DropDownItems.Insert(exit, this.newExchangeServiceMenu);
         }
@@ -583,6 +599,8 @@ namespace EWSEditor.Forms
             this.mnuRefresh.Click += new EventHandler(this.RefreshMenu_Click);
 
             this.DefaultDetailPropertySet.BasePropertySet = BasePropertySet.FirstClassProperties;
+
+            UpdateStoredExchangeServicesMenu();
         }
 
         #region File Menu
@@ -616,7 +634,7 @@ namespace EWSEditor.Forms
                 }
 
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
-                TreeNode serviceNode = this.AddServiceToTreeView(service, oAppSettings);
+                this.AddServiceToTreeView(service, oAppSettings);
             }
             finally
             {
@@ -878,6 +896,101 @@ namespace EWSEditor.Forms
             finally
             {
                 this.Cursor = Cursors.Default;
+            }
+        }
+
+        private void ManageStoredExchangeServicesMenu_Click(object sender, EventArgs e)
+        {
+            using (var dlg = new ManageServicesDialog())
+            {
+                dlg.StoredServices = new StoredServices();
+
+                var json = UserSettings.Default.StoredServices;
+                if (!string.IsNullOrWhiteSpace(json))
+                {
+                    dlg.StoredServices.Deserialize(json);
+                }
+
+                dlg.ShowDialog();
+
+                UserSettings.Default.StoredServices = dlg.StoredServices.Serialize();
+                UserSettings.Default.Save();
+
+                UpdateStoredExchangeServicesMenu();
+            }
+        }
+
+        private void OnStoredServiceMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.Cursor = Cursors.WaitCursor;
+
+                CloseExchangeServiceButton_Click(sender, e);
+
+                var item = sender as ToolStripMenuItem;
+                if (item == null)
+                {
+                    return;
+                }
+
+                var stored_service = item.Tag as StoredService;
+
+                using (var dlg = new ServiceDialog())
+                {
+                    dlg.CurrentService = stored_service.Service;
+                    dlg.CurrentAppSettings = stored_service.AppSettings;
+
+                    var result = dlg.ShowDialog();
+                    if (result != DialogResult.OK)
+                    {
+                        DebugLog.WriteVerbose(string.Format("Leave: ServiceDialog returned {0}", result));
+                        return;
+                    }
+
+                    if (dlg.CurrentService == null)
+                    {
+                        DebugLog.WriteVerbose(string.Format("Leave: ExchangeService is null"));
+                        return;
+                    }
+
+                    this.AddServiceToTreeView(dlg.CurrentService, dlg.CurrentAppSettings);
+                }
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
+        }
+
+        private void UpdateStoredExchangeServicesMenu()
+        {
+            storedExchangeServicesMenu.DropDownItems.Clear();
+            storedExchangeServicesMenu.Enabled = false;
+
+            var json = UserSettings.Default.StoredServices;
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return;
+            }
+
+            var stored_services = new StoredServices();
+            stored_services.Deserialize(json);
+
+            var menu_item = stored_services.Select(service =>
+            {
+                var item = new ToolStripMenuItem {
+                    Text = service.Name,
+                    Tag = service,
+                };
+                item.Click += OnStoredServiceMenuItem_Click;
+                return item;
+            }).ToArray();
+            storedExchangeServicesMenu.DropDownItems.AddRange(menu_item);
+
+            if (storedExchangeServicesMenu.HasDropDownItems)
+            {
+                storedExchangeServicesMenu.Enabled = true;
             }
         }
 
