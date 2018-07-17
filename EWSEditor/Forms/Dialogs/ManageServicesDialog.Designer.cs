@@ -55,7 +55,7 @@
             this.btnClose.Location = new System.Drawing.Point(211, 189);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
-            this.btnClose.TabIndex = 1;
+            this.btnClose.TabIndex = 8;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
             // 
@@ -65,7 +65,7 @@
             this.btnAddService.Location = new System.Drawing.Point(138, 59);
             this.btnAddService.Name = "btnAddService";
             this.btnAddService.Size = new System.Drawing.Size(148, 23);
-            this.btnAddService.TabIndex = 2;
+            this.btnAddService.TabIndex = 5;
             this.btnAddService.Text = "Add Exchange Service";
             this.btnAddService.UseVisualStyleBackColor = true;
             this.btnAddService.Click += new System.EventHandler(this.btnAddService_Click);
@@ -76,7 +76,7 @@
             this.btnRemoveService.Location = new System.Drawing.Point(138, 136);
             this.btnRemoveService.Name = "btnRemoveService";
             this.btnRemoveService.Size = new System.Drawing.Size(148, 23);
-            this.btnRemoveService.TabIndex = 3;
+            this.btnRemoveService.TabIndex = 7;
             this.btnRemoveService.Text = "Remove Exchange Service";
             this.btnRemoveService.UseVisualStyleBackColor = true;
             this.btnRemoveService.Click += new System.EventHandler(this.btnRemoveService_Click);
@@ -87,7 +87,7 @@
             this.lblServiceCount.Location = new System.Drawing.Point(108, 162);
             this.lblServiceCount.Name = "lblServiceCount";
             this.lblServiceCount.Size = new System.Drawing.Size(24, 13);
-            this.lblServiceCount.TabIndex = 4;
+            this.lblServiceCount.TabIndex = 2;
             this.lblServiceCount.Text = "0/5";
             this.lblServiceCount.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -97,7 +97,7 @@
             this.label1.Location = new System.Drawing.Point(12, 162);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(85, 13);
-            this.label1.TabIndex = 5;
+            this.label1.TabIndex = 1;
             this.label1.Text = "Stored Services:";
             // 
             // btnEditService
@@ -116,7 +116,7 @@
             this.txtServiceName.Location = new System.Drawing.Point(138, 33);
             this.txtServiceName.Name = "txtServiceName";
             this.txtServiceName.Size = new System.Drawing.Size(147, 20);
-            this.txtServiceName.TabIndex = 7;
+            this.txtServiceName.TabIndex = 4;
             this.txtServiceName.TextChanged += new System.EventHandler(this.txtServiceName_TextChanged);
             // 
             // label2
@@ -125,7 +125,7 @@
             this.label2.Location = new System.Drawing.Point(139, 14);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(77, 13);
-            this.label2.TabIndex = 8;
+            this.label2.TabIndex = 3;
             this.label2.Text = "Service Name:";
             // 
             // ManageServicesDialog
